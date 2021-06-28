@@ -1,24 +1,23 @@
-# vuetest
+# 浅谈虚拟滚动
 
-## Project setup
-```
-npm install
-```
+## 为什么想改造flexTable
+1. flexTable组件目前是xmp项目全站的table组件，使用度高，而虚拟滚动为flexTable缺失的重要功能；
+2. 目前xmp为了解决table多条数据，引入了umy-ui第三方外部组件，该组件较为庞大；
+3. 除完成业务需求外，想“折腾”一些技术改进；
+3. 离职同事罗宾的“遗愿”；
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## 改造功能点：增加表格虚拟滚动功能
+* 背景：xmp项目Apple广告创建以及关键词管理中，需要一次性铺开5000条数据的表格，当前flexTable组件对数据的承载量只能是几百条的数量级。
+* 目的：让flexTable可以通过参数开启虚拟滚动功能，达到表格承载10万条数据不卡顿。
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## 虚拟滚动的优化思路
+1. 采用“窗口化”技术，只需要渲染少部分的内容（可视区域，例如只渲染10条Div），减少重新渲染组件和创建dom节点的时间；
+2. 将所有数据绝对定位，并通过transform（节省性能）按高度递增排列；
+3. 每当用户于表格中进行滚动操作，获取表格可视区域的第一条（startIndex）和最后一条（endIndex）数据的位置，截取可视范围内数据作为表格数据（dataList），从而实现虚拟滚动
 
-### Lints and fixes files
-```
-npm run lint
-```
+## 虚拟滚动的局限
+1. 只支持每条数据高度一致的情况，不支持展开行以及任何会改变单元格高度的方式；
+2. 不支持分组表头；
+3. 当表格有固定列的情况，虚拟滚动可能会有延迟
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+必须给源数据每一项加上唯一id。必须确定且唯一。假如用随机数，会导致每次的id都不一致，vue会误以为是有是数据更新，无法复用
