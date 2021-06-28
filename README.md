@@ -1,4 +1,4 @@
-# 浅谈虚拟滚动
+# 虚拟滚动核心代码
 
 ## 为什么想改造flexTable
 1. flexTable组件目前是xmp项目全站的table组件，使用度高，而虚拟滚动为flexTable缺失的重要功能；
